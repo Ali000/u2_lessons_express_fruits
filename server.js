@@ -22,7 +22,7 @@ app.get("/five", (req, res) => {
 });
 
 app.get("/evens/:n", (req, res) => {
-  // this is yeilding 10 times the expected results
+  // this is yeilding 10 times the expected results, this was because I didn't parseInt on line 27 for the parameter.
   const parameter = req.params.n;
   const number = isNaN(parseInt(parameter)) ? "Not a number" : parseInt(parameter);
   const numbersArray = [];
@@ -41,6 +41,20 @@ app.get("/namelength/:name", (req, res) => {
   res.json(name.length);
 });
 
+app.get("/fruits/sort", (req, res) => {
+  const sortedFruits = fruits;
+  sortedFruits.sort((firstValue, secondValue) => {
+    if(firstValue.name < secondValue.name) {
+      return -1;
+    }
+    if(firstValue.name > secondValue.name) {
+      return 1;
+    }
+    return 0;
+  });
+  res.send(sortedFruits);
+});
+
 app.get("/fruits/:name", (req, res) => {
   const fruit = req.params.name;
   const found = fruits.find(value => value.name.toLocaleLowerCase() === fruit.toLowerCase());
@@ -48,9 +62,12 @@ app.get("/fruits/:name", (req, res) => {
 });
 
 app.get("/fruits", (req, res) => {
-
   res.send(fruits);
 });
+
+app.get('*', (req, res) => {
+  res.send('404 Not Found')
+})
 
 app.listen(PORT, () => {
   console.log(`Serving up delicious fruits on port ${PORT}`);
